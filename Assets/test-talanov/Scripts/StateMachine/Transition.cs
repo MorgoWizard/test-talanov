@@ -8,6 +8,4 @@
         To = to;
         Condition = condition;
     }
-    
-    
 }
