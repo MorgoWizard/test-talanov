@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         
         if (moveDirection.sqrMagnitude > 0.01f)
         {
-            transform.forward = moveDirection;
+             transform.forward = Vector3.Lerp(transform.forward, moveDirection, 0.15f);
         }
         
         var newSpeed = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
