@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Dolls.Movement;
 using UnityEngine;
@@ -6,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private static readonly int Speed = Animator.StringToHash("Speed");
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
     
@@ -73,7 +73,20 @@ public class PlayerController : MonoBehaviour
 
     public void HandleMove()
     {
-        rb.linearVelocity = new Vector3(_lastMoveInput.x * moveSpeed, rb.linearVelocity.y, _lastMoveInput.y * moveSpeed);
+        Vector3 camForwardXZ = Vector3.ProjectOnPlane(_mainCamera.forward, Vector3.up).normalized;
+        Vector3 camRightXZ = Vector3.ProjectOnPlane(_mainCamera.right, Vector3.up).normalized;
+        
+        Vector3 moveDirection = camRightXZ * _lastMoveInput.x + camForwardXZ * _lastMoveInput.y;
+        
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            transform.forward = moveDirection;
+        }
+        
+        var newSpeed = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
+        rb.linearVelocity = newSpeed;
+        
+        animator.SetFloat(Speed, moveDirection.magnitude > 0.1f ? 1 : 0);
     }
 
     private void SetupStateMachine()

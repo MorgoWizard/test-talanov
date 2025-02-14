@@ -2,7 +2,7 @@
 
 public class FuncPredicate : IPredicate
 {
-    readonly Func<bool> _func;
+    private readonly Func<bool> _func;
 
     public FuncPredicate(Func<bool> func)
     {
